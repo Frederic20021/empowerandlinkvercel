@@ -1,0 +1,2 @@
+/* /smart-mensetsu hides the site footer (as in the mockup): the section carries data-hide-footer. */
+.site:has([data-hide-footer]) .site-footer{display:none}

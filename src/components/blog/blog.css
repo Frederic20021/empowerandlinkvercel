@@ -1,0 +1,7 @@
+/* Blog-only additions on top of the candidate A post styles in globals.css. */
+.post-img{position:relative}
+.post-body p{white-space:pre-line}
+.post-body li>p{margin:0}
+.post-body figure img{height:auto;width:auto;max-width:100%}
+.post-body ol{margin:0 0 1.4em;padding-left:1.4em;list-style:decimal}
+.post-body blockquote{margin:0 0 1.4em;padding:.2em 0 .2em 1.2em;border-left:3px solid var(--light);color:var(--muted)}

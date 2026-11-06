@@ -34,3 +34,21 @@ You can check out [the Next.js GitHub repository](https://github.com/vercel/next
 The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
 
 Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+
+## Blog and admin
+
+Posts are Markdown files with front matter in `content/blog/`; their images live in `public/images/blog/`. The public pages (`/blog`, `/blog/<slug>`, `/blog/rss.xml`) are built from those files.
+
+The admin is at `/admin` (login at `/admin/login`). Copy `.env.example` to `.env.local` and set:
+
+| Variable | Purpose |
+| --- | --- |
+| `NEXT_PUBLIC_SITE_URL` | Public origin used for canonical URLs, sitemap and RSS. |
+| `ADMIN_PASSWORD` | Admin login password (server-only). |
+| `ADMIN_SESSION_SECRET` | 32+ random characters; signs the 8-hour `el_admin` session cookie. |
+| `BLOG_STORAGE` | `local` writes straight into `content/blog` and `public/images/blog`; `github` commits through the GitHub Contents API. Defaults to `local` outside production and `github` in production. |
+| `GITHUB_TOKEN` | Token with Contents read/write (server-only, `github` mode). |
+| `GITHUB_REPO` | `owner/name`, default `Frederic20021/empowerandlinkvercel`. |
+| `GITHUB_BRANCH` | Default `main`. |
+
+With `npm run dev` the admin edits the local files directly. On Vercel (`github` mode) each save is a commit, and the redeploy publishes it.

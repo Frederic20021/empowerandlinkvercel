@@ -1,4 +1,5 @@
 import type { MetadataRoute } from "next";
+import { getAllPosts } from "@/lib/blog";
 import { getSiteUrl } from "@/lib/site-url";
 
 const STATIC_ROUTES: Array<{
@@ -33,5 +34,12 @@ export function buildSitemap(extra: MetadataRoute.Sitemap = []): MetadataRoute.S
 }
 
 export default function sitemap(): MetadataRoute.Sitemap {
-  return buildSitemap();
+  const base = getSiteUrl();
+  const posts: MetadataRoute.Sitemap = getAllPosts().map((p) => ({
+    url: `${base}/blog/${p.slug}`,
+    lastModified: p.date ? new Date(p.date) : undefined,
+    changeFrequency: "monthly",
+    priority: 0.6,
+  }));
+  return buildSitemap(posts);
 }

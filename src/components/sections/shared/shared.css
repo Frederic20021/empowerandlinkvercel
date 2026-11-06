@@ -1,0 +1,3 @@
+/* Image frames from the mockup whose img is `fill`ed: they need to be positioned. */
+.prof-ph,.case-ph,.para{position:relative}
+.prof-ph img,.case-ph img,.para img,.pt-ph img,.sol-ph img{position:absolute;inset:0}

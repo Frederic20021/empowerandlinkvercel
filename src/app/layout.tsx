@@ -6,7 +6,6 @@ import { fontClassName } from "@/lib/fonts";
 import { getSiteUrl } from "@/lib/site-url";
 import { SITE } from "@/content/site";
 import { homeHero } from "@/content/home";
-import { SiteShell } from "@/components/layout/SiteShell";
 
 export const metadata: Metadata = {
   metadataBase: new URL(getSiteUrl()),
@@ -34,7 +33,7 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
         <script dangerouslySetInnerHTML={{ __html: JS_FLAG }} />
       </head>
       <body>
-        <SiteShell>{children}</SiteShell>
+        {children}
         <Analytics />
         <SpeedInsights />
       </body>

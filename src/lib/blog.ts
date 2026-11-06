@@ -2,6 +2,9 @@ import "server-only";
 import fs from "node:fs";
 import path from "node:path";
 import matter from "gray-matter";
+import { isValidSlug } from "./blog-slug";
+
+export { isValidSlug, SLUG_RE, SLUG_MAX } from "./blog-slug";
 
 export type BlogPost = {
   slug: string;
@@ -34,17 +37,37 @@ export function parsePost(raw: string, fileSlug: string): BlogPost {
   };
 }
 
+/** Newest first; same-day posts keep a stable order by slug. */
+export function sortPosts(posts: BlogPost[]): BlogPost[] {
+  return [...posts].sort((a, b) => b.date.localeCompare(a.date) || a.slug.localeCompare(b.slug));
+}
+
+/** Every post in `dir` (drafts included) in no particular order. */
+export function readPostsFromDir(dir: string): BlogPost[] {
+  if (!fs.existsSync(dir)) return [];
+  return fs
+    .readdirSync(dir)
+    .filter((f) => f.endsWith(".md"))
+    .map((f) => parsePost(fs.readFileSync(path.join(dir, f), "utf-8"), f.replace(/\.md$/, "")));
+}
+
+export function selectPublished(posts: BlogPost[]): BlogPost[] {
+  return sortPosts(posts.filter((p) => p.title && p.published && isValidSlug(p.slug)));
+}
+
 /** Published posts, newest first. */
 export function getAllPosts(): BlogPost[] {
-  if (!fs.existsSync(BLOG_DIR)) return [];
-  return fs
-    .readdirSync(BLOG_DIR)
-    .filter((f) => f.endsWith(".md"))
-    .map((f) => parsePost(fs.readFileSync(path.join(BLOG_DIR, f), "utf-8"), f.replace(/\.md$/, "")))
-    .filter((p) => p.title && p.published)
-    .sort((a, b) => b.date.localeCompare(a.date));
+  return selectPublished(readPostsFromDir(BLOG_DIR));
 }
 
 export function getPostBySlug(slug: string): BlogPost | null {
   return getAllPosts().find((p) => p.slug === slug) ?? null;
+}
+
+/** Neighbours of `slug` in the published list: `newer` is the previous entry, `older` the next one. */
+export function getAdjacentPosts(slug: string): { newer: BlogPost | null; older: BlogPost | null } {
+  const posts = getAllPosts();
+  const i = posts.findIndex((p) => p.slug === slug);
+  if (i === -1) return { newer: null, older: null };
+  return { newer: posts[i - 1] ?? null, older: posts[i + 1] ?? null };
 }

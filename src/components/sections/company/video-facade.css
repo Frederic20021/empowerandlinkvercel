@@ -1,0 +1,9 @@
+.vfacade{position:relative;display:block;width:100%;height:100%;padding:0;border:0;cursor:pointer;background:var(--navy-dd);overflow:hidden}
+.vfacade img{object-fit:cover;transition:transform 1.2s var(--ease),filter .4s}
+.vfacade::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(10,28,82,.05),rgba(10,28,82,.45))}
+.vfacade:hover img{transform:scale(1.04)}
+.vplay{position:absolute;left:50%;top:50%;z-index:1;width:84px;height:84px;margin:-42px 0 0 -42px;border-radius:50%;background:#fff;color:var(--navy);display:grid;place-items:center;box-shadow:0 18px 40px -12px rgba(10,28,82,.6);transition:transform .4s var(--ease)}
+.vplay svg{width:34px;height:34px;margin-left:4px}
+.vfacade:hover .vplay{transform:scale(1.08)}
+.vfacade:focus-visible{outline:3px solid var(--mid);outline-offset:-3px}
+@media(prefers-reduced-motion:reduce){.vfacade img,.vplay{transition:none}}
