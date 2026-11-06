@@ -27,6 +27,8 @@ const cspReportOnly = [
 
 const nextConfig: NextConfig = {
   poweredByHeader: false,
+  // Lets several local builds run side by side (e.g. NEXT_DIST_DIR=.next-a). Defaults to .next.
+  distDir: process.env.NEXT_DIST_DIR || ".next",
   experimental: {
     globalNotFound: true,
   },
