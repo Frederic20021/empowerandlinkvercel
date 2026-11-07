@@ -10,6 +10,13 @@ import { prefersReducedMotion } from "./observe";
  * the middle strand. Mirrors a-current/main.js (buildRiver / paintRiver). Sections are the direct
  * children of `.site main` (`.sec` / `article`).
  */
+/** Bottom edge of the page content (header + main + footer), excluding the absolutely positioned river. */
+export function siteHeight(): number {
+  const site = document.getElementById("site");
+  if (!site) return document.body.scrollHeight;
+  return Math.ceil(site.getBoundingClientRect().bottom + window.scrollY);
+}
+
 export function FlowCurrent() {
   const pathname = usePathname();
   const [geom, setGeom] = useState<RiverGeometry | null>(null);
@@ -37,7 +44,9 @@ export function FlowCurrent() {
   const rebuild = useCallback(() => {
     const de = document.documentElement;
     const W = de.clientWidth;
-    const H = Math.max(de.scrollHeight, document.body.scrollHeight);
+    // Measure the content (#site), never the document: the river itself is part of the document, so
+    // document.scrollHeight would keep it at its old height and leave blank space after a page gets shorter.
+    const H = siteHeight();
     const secs = Array.from(document.querySelectorAll(".site main > .sec, .site main > article"));
     const tops = secs.map((s) => s.getBoundingClientRect().top + window.scrollY);
     setGeom(riverGeometry(W, H, tops));
@@ -85,13 +94,14 @@ export function FlowCurrent() {
     if ("ResizeObserver" in window) {
       let lastH = 0;
       ro = new ResizeObserver(() => {
-        const h = document.body.scrollHeight;
+        const h = siteHeight();
         if (Math.abs(h - lastH) > 4) {
           lastH = h;
           schedule();
         }
       });
-      ro.observe(document.body);
+      const site = document.getElementById("site");
+      if (site) ro.observe(site);
     }
     const first = requestAnimationFrame(rebuild);
     if (document.readyState === "complete") setTimeout(rebuild, 600);
