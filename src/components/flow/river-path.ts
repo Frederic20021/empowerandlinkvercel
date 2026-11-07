@@ -87,15 +87,16 @@ export function riverGeometry(W: number, H: number, tops: number[]): RiverGeomet
   return { W, H, paths, widths };
 }
 
-/** Local river through numbered stations: control points from node centres (relative to the container). */
+/**
+ * Local river through numbered stations: control points from node centres (relative to the container).
+ * It starts at the first node and ends at the last one, so the flow stops exactly at the final step.
+ */
 export function stepsPoints(centers: Pt[], mobile: boolean): Pt[] {
   const amp = mobile ? 8 : 38;
   const pts: Pt[] = [];
   centers.forEach(([x, y], i) => {
-    if (i === 0) pts.push([x, y - 26]);
     pts.push([x, y]);
     if (i < centers.length - 1) pts.push([x + (i % 2 ? -amp : amp), (y + centers[i + 1][1]) / 2]);
-    else pts.push([x, y + 40]);
   });
   return pts;
 }

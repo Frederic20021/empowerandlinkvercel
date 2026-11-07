@@ -22,6 +22,26 @@ type Local = { w: number; h: number; paths: string[]; ny: number[] };
 
 const STROKE = [2.6, 2.2, 1.8];
 
+/** Position of `el` inside `root` from layout offsets (offsetLeft/Top), unaffected by CSS transforms. */
+export function offsetWithin(el: HTMLElement, root: HTMLElement): { x: number; y: number } {
+  let x = 0;
+  let y = 0;
+  let cur: HTMLElement | null = el;
+  while (cur && cur !== root) {
+    x += cur.offsetLeft;
+    y += cur.offsetTop;
+    const parent = cur.offsetParent as HTMLElement | null;
+    // If root is not an offsetParent in the chain, fall back to subtracting its own offsets.
+    if (parent && !root.contains(parent) && parent !== root) {
+      x -= root.offsetLeft;
+      y -= root.offsetTop;
+      break;
+    }
+    cur = parent;
+  }
+  return { x, y };
+}
+
 /**
  * Numbered stations along a wavy three-strand river that draws itself and lights each node as you
  * scroll (`.steps` / `.station` / `.scard`). Cards alternate left/right from 900px.
@@ -41,7 +61,8 @@ export function RiverSteps({ items, className }: RiverStepsProps) {
     if (!root || !local || !strands[1] || !lens[1]) return;
     const reduce = prefersReducedMotion();
     const top = root.getBoundingClientRect().top;
-    const y = window.innerHeight * 0.62 - top;
+    // Scroll trigger line, capped at the last node so the drawing stops there.
+    const y = Math.min(window.innerHeight * 0.62 - top, local.ny[local.ny.length - 1]);
     const mid = strands[1];
     const Lm = reduce ? lens[1] : lengthAtY((l) => mid.getPointAtLength(l), lens[1], Math.max(0, y));
     const fr = Lm / lens[1];
@@ -60,9 +81,12 @@ export function RiverSteps({ items, className }: RiverStepsProps) {
     const cr = root.getBoundingClientRect();
     const nodes = Array.from(root.querySelectorAll<HTMLElement>(".node"));
     if (!nodes.length) return;
+    // The stations slide up into place (reveal: translateY), so a measurement taken mid-slide would put
+    // the river below the nodes. Take y from layout offsets, which ignore transforms; x from the box
+    // (the reveal never moves things sideways, and the node itself is centred with translateX).
     const centers: Pt[] = nodes.map((n) => {
       const r = n.getBoundingClientRect();
-      return [r.left - cr.left + r.width / 2, r.top - cr.top + r.height / 2];
+      return [r.left - cr.left + r.width / 2, offsetWithin(n, root).y + n.offsetHeight / 2];
     });
     setLocal({
       w: cr.width,
