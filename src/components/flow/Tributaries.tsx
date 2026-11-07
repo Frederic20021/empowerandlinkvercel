@@ -29,9 +29,9 @@ export function Tributaries({ children, count = 4, className }: TributariesProps
       <div className="svc-grid">{children}</div>
       <svg className="tribs-svg" viewBox="0 0 1000 150" preserveAspectRatio="none" aria-hidden="true">
         {xs.map((x, k) => (
-          <path key={k} className={`trib t${k % 4}`} d={`M${x},0 C${x},70 500,60 500,140`} />
+          <path key={k} className={`trib t${k % 4}`} pathLength={1} d={`M${x},0 C${x},70 500,60 500,140`} />
         ))}
-        <path className="trunk" d="M500,140 L500,150" />
+        <path className="trunk" pathLength={1} d="M500,140 L500,150" />
       </svg>
     </div>
   );

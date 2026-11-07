@@ -111,9 +111,9 @@ export function HomePhilosophy() {
         </SectionHead>
         <div className="stops">
           <svg className="stops-svg" viewBox="0 0 1000 80" preserveAspectRatio="none" aria-hidden="true">
-            <path className="p0" d="M0,40 C150,0 250,80 400,40 S650,0 800,40 S950,70 1000,40" />
-            <path className="p1" d="M0,40 C150,10 250,70 400,40 S650,10 800,40 S950,60 1000,40" />
-            <path className="p2" d="M0,40 C150,20 250,60 400,40 S650,20 800,40 S950,50 1000,40" />
+            <path className="p0" d="M0,40 C160,4 340,76 500,40 S840,4 1000,40" />
+            <path className="p1" d="M0,40 C160,12 340,68 500,40 S840,12 1000,40" />
+            <path className="p2" d="M0,40 C160,20 340,60 500,40 S840,20 1000,40" />
           </svg>
           <ol>
             {p.items.map((it, i) => {

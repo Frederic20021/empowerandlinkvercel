@@ -61,8 +61,12 @@ export function RiverSteps({ items, className }: RiverStepsProps) {
     if (!root || !local || !strands[1] || !lens[1]) return;
     const reduce = prefersReducedMotion();
     const top = root.getBoundingClientRect().top;
-    // Scroll trigger line, capped at the last node so the drawing stops there.
-    const y = Math.min(window.innerHeight * 0.62 - top, local.ny[local.ny.length - 1]);
+    // Scroll trigger line, capped at the last node so the drawing stops there. At the very bottom of the
+    // page the last station may never reach the 62% line, so finish the river then.
+    const lastY = local.ny[local.ny.length - 1];
+    const de = document.documentElement;
+    const atEnd = window.scrollY + window.innerHeight >= de.scrollHeight - 2;
+    const y = atEnd ? lastY : Math.min(window.innerHeight * 0.62 - top, lastY);
     const mid = strands[1];
     const Lm = reduce ? lens[1] : lengthAtY((l) => mid.getPointAtLength(l), lens[1], Math.max(0, y));
     const fr = Lm / lens[1];

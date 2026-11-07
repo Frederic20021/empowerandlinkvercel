@@ -190,6 +190,7 @@ strong{font-weight:700;color:var(--navy)}
 .blobA{clip-path:url(#blobA)}.blobB{clip-path:url(#blobB)}
 .hero-v{position:relative}
 .hero-v::before{content:"";position:absolute;inset:-6% -6% -6% 8%;border-radius:50%;background:radial-gradient(closest-side,rgba(147,191,230,.5),transparent);z-index:-1}
+@media(max-width:899px){.hero-v::before{right:0}}
 .hero-mark{display:none}
 .hcards{display:grid;gap:16px;margin-top:clamp(44px,6vw,80px);grid-template-columns:repeat(auto-fit,minmax(min(100%,240px),1fr))}
 .hcard{display:block;text-decoration:none;position:relative;background:#fff;border:1px solid var(--line);border-radius:var(--r-m);padding:26px 24px 24px;box-shadow:var(--sh1);transition:transform .5s var(--ease),box-shadow .5s var(--ease),border-color .3s}
@@ -250,7 +251,8 @@ html:not(.js) .trib,html:not(.js) .trunk{stroke-dashoffset:0}
 
 /* philosophy stops */
 .stops{position:relative;margin-top:20px}
-.stops-svg{display:none;position:absolute;left:0;top:20px;width:100%;height:80px}
+/* desktop: spans exactly from the first to the last node centre (3 columns, 48px gaps), midline through the node centres */
+.stops-svg{display:none;position:absolute;left:calc((100% - 96px) / 6);top:-8px;width:calc(100% - (100% - 96px) / 3);height:80px;overflow:visible}
 .stops-svg path{fill:none;stroke-width:2;vector-effect:non-scaling-stroke}
 .stops-svg .p0{stroke:var(--navy)}.stops-svg .p1{stroke:var(--mid)}.stops-svg .p2{stroke:var(--light)}
 .stops ol{display:grid;gap:36px;position:relative;padding-left:0}
@@ -259,9 +261,11 @@ html:not(.js) .trib,html:not(.js) .trunk{stroke-dashoffset:0}
 .stop .node .ic{width:26px;height:26px}
 .stop h3{margin:6px 0 10px}
 .stop p{color:var(--muted);font-size:.94rem}
-.stops ol::before{content:"";position:absolute;left:27px;top:20px;bottom:20px;width:2px;background:linear-gradient(var(--navy),var(--mid),var(--light))}
+/* mobile: one segment per stop, from its node centre to the next node centre, so the line ends at the last node */
+.stop:not(:last-child)::before{content:"";position:absolute;left:27px;top:28px;height:calc(100% + 36px);width:2px;background:linear-gradient(var(--navy),var(--mid))}
+.stop:nth-child(2)::before{background:linear-gradient(var(--mid),var(--light))}
 @media(min-width:900px){
-  .stops-svg{display:block}.stops ol{grid-template-columns:repeat(3,1fr);gap:48px}.stops ol::before{display:none}
+  .stops-svg{display:block}.stops ol{grid-template-columns:repeat(3,1fr);gap:48px}.stop::before{display:none}
   .stop{padding:84px 0 0;text-align:center}.stop .node{left:50%;transform:translateX(-50%);top:0;width:64px;height:64px;background:#fff}
 }
 
@@ -344,6 +348,8 @@ html:not(.js) .trib,html:not(.js) .trunk{stroke-dashoffset:0}
 .card p{font-size:.93rem;line-height:1.9;color:var(--muted)}
 .card>.ic{width:32px;height:32px;color:var(--mid);margin-bottom:14px}
 .grid2,.grid3,.grid4{display:grid;gap:22px}
+/* Grid items default to min-width:auto, so one wide child (a table, a nowrap URL bar, a mock window) would stretch its column past the viewport. Let layout columns shrink to the screen instead. */
+:is(.split-head,.checks,.hero-grid,.hcards,.phero-grid,.stat-row,.pebbles,.svc-grid,.stops ol,.steps,.posts,.fgrid,.grid2,.grid3,.grid4,.ceo,.dl-row,.access,.profs,.cgrid,.worry,.wcards,.outs-w,.outs,.reason,.facts,.chal,.jgrid,.flowbar ol,.ictgrid,.nm,.plan,.o2,.o2-ph,.sol)>*{min-width:0}
 @media(min-width:760px){.grid2{grid-template-columns:1fr 1fr}.grid3{grid-template-columns:repeat(2,1fr)}}
 @media(min-width:1000px){.grid3{grid-template-columns:repeat(3,1fr)}.grid4{grid-template-columns:repeat(4,1fr)}}
 @media(min-width:640px) and (max-width:999px){.grid4{grid-template-columns:1fr 1fr}}

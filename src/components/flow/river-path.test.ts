@@ -81,18 +81,24 @@ describe("stepsPoints / stepsPaths", () => {
     [30, 500],
   ];
 
-  it("starts at the first node and stops at the last node, with no tail beyond it", () => {
+  it("adds a lead-in above the first node and ends exactly at the last node", () => {
     const pts = stepsPoints(centers, false);
-    expect(pts[0]).toEqual([30, 100]);
+    expect(pts[0]).toEqual([30, 74]);
     expect(pts[pts.length - 1]).toEqual([30, 500]);
-    expect(Math.max(...pts.map((p) => p[1]))).toBe(500);
+  });
+
+  it("never extends below the last node", () => {
+    for (const mobile of [false, true]) {
+      const ys = stepsPoints(centers, mobile).map((p) => p[1]);
+      expect(Math.max(...ys)).toBe(500);
+    }
   });
 
   it("meanders between nodes with the desktop/mobile amplitude, alternating sides", () => {
     const d = stepsPoints(centers, false);
-    expect(d[1]).toEqual([30 + 38, 200]);
-    expect(d[3]).toEqual([30 - 38, 400]);
-    expect(stepsPoints(centers, true)[1]).toEqual([30 + 8, 200]);
+    expect(d[2]).toEqual([30 + 38, 200]);
+    expect(d[4]).toEqual([30 - 38, 400]);
+    expect(stepsPoints(centers, true)[2]).toEqual([30 + 8, 200]);
   });
 
   it("returns three strand paths", () => {
