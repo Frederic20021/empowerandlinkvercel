@@ -3,7 +3,6 @@ import { ButtonLink, Eyebrow } from "@/components/layout/primitives";
 import { smartMensetsuEmbed, smartMensetsuHero } from "@/content/smart-mensetsu";
 import { BrowserFrame } from "../shared/BrowserFrame";
 import { Lines } from "../shared/text";
-import "./smart-mensetsu.css";
 
 export function SmartHero() {
   const h = smartMensetsuHero;
@@ -30,7 +29,7 @@ export function SmartEmbed() {
   const e = smartMensetsuEmbed.embed;
   const url = e.url.replace(/^https:\/\//, "").replace(/[/#]+$/, "");
   return (
-    <section className="sec" id="embed" data-hide-footer>
+    <section className="sec" id="embed">
       <div className="wrap wide">
         <BrowserFrame url={url} big>
           <iframe src={e.url} title={e.title} loading="lazy" />
